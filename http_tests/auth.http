@@ -1,0 +1,17 @@
+POST localhost:8080/auth/login
+Content-Type: application/json
+
+{
+  "username": "user",
+  "password": "pass"
+}
+
+###
+
+GET localhost:8080/auth/profile
+Authorization: Bearer 8d3854be1c3593aff3a1856be8e4d27dc9bf56bb3a540a985c5291b518ee6965
+
+###
+
+DELETE localhost:8080/auth/revoke-tokens
+Authorization: Bearer 8d3854be1c3593aff3a1856be8e4d27dc9bf56bb3a540a985c5291b518ee6965

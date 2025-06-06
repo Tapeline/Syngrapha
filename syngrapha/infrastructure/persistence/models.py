@@ -1,0 +1,59 @@
+from datetime import datetime
+from typing import final
+
+from sqlalchemy import DateTime, ForeignKey, String, Uuid
+from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
+from sqlalchemy.sql.functions import current_timestamp
+
+
+class Base(DeclarativeBase):
+    """Base model."""
+
+
+@final
+class UserModel(Base):
+    """Table for users."""
+
+    __tablename__ = "users"
+
+    uuid: Mapped[str] = mapped_column(
+        "uuid",
+        Uuid,
+        primary_key=True,
+    )
+    username: Mapped[str] = mapped_column(
+        "username",
+        String(length=64),
+        unique=True
+    )
+    hashed_pass: Mapped[str]
+    phone_number: Mapped[str]
+    nalog_access_token: Mapped[str | None] = mapped_column(
+        "nalog_access_token",
+        String(256),
+        nullable=True
+    )
+
+
+@final
+class UserAuthTokenModel(Base):
+    """Table for auth tokens."""
+
+    __tablename__ = "tokens"
+
+    user_id: Mapped[str] = mapped_column(
+        "user_id",
+        ForeignKey("users.uuid")
+    )
+    user: Mapped[UserModel] = relationship()
+    token: Mapped[str] = mapped_column(
+        "token",
+        String(256),
+        primary_key=True
+    )
+    issued_at: Mapped[datetime] = mapped_column(
+        "issued_at",
+        DateTime,
+        default=datetime.now,
+        server_default=current_timestamp()
+    )

@@ -1,0 +1,31 @@
+[flake8]
+
+max-imports = 16
+
+
+allowed-domain-names =
+    items
+    result
+    data
+    value
+
+
+exclude =
+    syngrapha/infrastructure/persistence/migrations/**
+
+
+ignore =
+    WPS430
+    # i like nested functions
+
+
+per-file-ignores =
+    syngrapha/infrastructure/persistence/database.py: WPS432
+    syngrapha/infrastructure/persistence/models.py: WPS432
+    syngrapha/config.py: WPS432
+    # These are configs by themselves
+
+    syngrapha/bootstrap/app.py: WPS201
+
+    syngrapha/bootstrap/di/**: WPS347
+    # from_context is good
