@@ -23,3 +23,14 @@ class UserGateway(Protocol):
 
         """
         raise NotImplementedError
+
+    @abstractmethod
+    async def save_user(self, user: User) -> None:
+        """
+        Save user model.
+
+        Args:
+            user: target user
+
+        """
+        raise NotImplementedError

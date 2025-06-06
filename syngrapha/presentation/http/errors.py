@@ -6,6 +6,12 @@ from syngrapha.application.auth.exceptions import (
     UserNotAuthenticated,
     UserNotFound,
 )
+from syngrapha.application.external.nalog import (
+    NalogReturnedError,
+    NalogTokenRequiresReAuth,
+)
+from syngrapha.application.interactors.auth_nalog.submit_code import \
+    InvalidNalogSMSCode
 from syngrapha.presentation.http.framework.errors import (
     gen_handler_mapping,
     infer_code,
@@ -16,4 +22,7 @@ handlers: Final = gen_handler_mapping({
     UserNotFound: (404, infer_code),
     UserCredsNotFound: (401, infer_code),
     UserNotAuthenticated: (401, infer_code),
+    NalogReturnedError: (503, infer_code),
+    NalogTokenRequiresReAuth: (401, infer_code),
+    InvalidNalogSMSCode: (401, infer_code)
 })

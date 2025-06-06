@@ -100,7 +100,8 @@ class AuthController(Controller):
         responses={
             200: success_spec("Success.", ProfileResponse),
             401: error_spec("Not authenticated."),
-        }
+        },
+        security=[{"jwt_auth": []}]
     )
     @inject
     async def get_profile(
@@ -123,7 +124,8 @@ class AuthController(Controller):
         responses={
             204: success_spec("Success.", None),
             401: error_spec("Not authenticated."),
-        }
+        },
+        security=[{"jwt_auth": []}]
     )
     @inject
     async def revoke_tokens(

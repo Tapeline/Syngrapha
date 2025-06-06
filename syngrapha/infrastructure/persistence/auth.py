@@ -105,7 +105,7 @@ class UserCredentialStoreImpl(UserCredentialStore):
         if not user:
             return None
         return (
-            uuid.UUID(user.uuid)
+            cast(uuid.UUID, user.uuid)
             if self.password_comparator(user.hashed_pass, password)
             else None
         )

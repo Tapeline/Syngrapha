@@ -1,0 +1,5 @@
+###
+
+POST https://irkkt-mobile.nalog.ru:8888/v2/ticket
+
+{"qr": ""}

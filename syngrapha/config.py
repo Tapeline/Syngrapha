@@ -23,6 +23,15 @@ class SecurityConfig(BaseModel):
     )
 
 
+class NalogConfig(BaseModel):
+    """nalog.ru config."""
+
+    secret: str = Field(
+        alias="NALOG_SECRET",
+        default="IyvrAbKt9h/8p6a7QPh8gpkXYQ4="  # works for everyone, I reckon
+    )
+
+
 class Config(BaseModel):
     """Config model."""
 
@@ -31,4 +40,7 @@ class Config(BaseModel):
     )
     security: SecurityConfig = Field(
         default_factory=lambda: SecurityConfig(**os.environ)  # type: ignore
+    )
+    nalog: NalogConfig = Field(
+        default_factory=lambda: NalogConfig(**os.environ)  # type: ignore
     )

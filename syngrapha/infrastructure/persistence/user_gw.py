@@ -1,8 +1,8 @@
 from dataclasses import dataclass
 
-from adaptix import P
+from adaptix import P, Retort
 from adaptix.conversion import get_converter, link, coercer
-from sqlalchemy import select
+from sqlalchemy import select, update
 from sqlalchemy.exc import NoResultFound
 
 from syngrapha.application.auth.exceptions import UserNotFound
@@ -12,7 +12,6 @@ from syngrapha.infrastructure.persistence.models import UserModel
 from syngrapha.infrastructure.persistence.uow import SAUoW
 from syngrapha.utils.coerce import id_link
 from syngrapha.utils.decorator import impl
-from syngrapha.utils.func import identity
 
 
 _convert_user = get_converter(
@@ -24,6 +23,7 @@ _convert_user = get_converter(
         id_link(P[UserModel].nalog_access_token, P[User].nalog_access_token),
     ],
 )
+_user_retort = Retort()
 
 
 @dataclass
@@ -40,3 +40,18 @@ class UserGatewayImpl(UserGateway):
             return _convert_user(result.scalars().one())
         except NoResultFound as exc:
             raise UserNotFound(uid) from exc
+
+    @impl
+    async def save_user(self, user: User) -> None:
+        query = (
+            update(UserModel)
+            .where(UserModel.uuid == user.id)
+            .values(
+                nalog_access_token=user.nalog_access_token,
+                phone_number=user.phone_number
+            )
+        )
+        try:
+            await self.uow.session.execute(query)
+        except NoResultFound as exc:
+            raise UserNotFound(user.id) from exc

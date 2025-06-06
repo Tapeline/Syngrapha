@@ -1,6 +1,11 @@
 from dishka import Provider, Scope, from_context, provide
 
-from syngrapha.config import Config, PostgresConfig, SecurityConfig
+from syngrapha.config import (
+    Config,
+    NalogConfig,
+    PostgresConfig,
+    SecurityConfig,
+)
 
 
 class ConfigDIProvider(Provider):
@@ -17,3 +22,8 @@ class ConfigDIProvider(Provider):
     def get_sec_config(self, config: Config) -> SecurityConfig:
         """Provide security conf."""
         return config.security
+
+    @provide(scope=Scope.APP)
+    def get_nalog_config(self, config: Config) -> NalogConfig:
+        """Provide nalog.ru conf."""
+        return config.nalog

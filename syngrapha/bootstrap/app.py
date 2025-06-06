@@ -7,14 +7,18 @@ from litestar import Litestar
 from litestar.logging import LoggingConfig
 from litestar.openapi import OpenAPIConfig
 from litestar.openapi.plugins import SwaggerRenderPlugin
+from litestar.openapi.spec import Components, SecurityScheme
 
 from syngrapha.bootstrap.di.algorithms import AlgorithmsDIProvider
 from syngrapha.bootstrap.di.auth import HeaderTokenDIProvider
+from syngrapha.bootstrap.di.auth_nalog import AuthNalogDIProvider
 from syngrapha.bootstrap.di.config import ConfigDIProvider
+from syngrapha.bootstrap.di.nalogru import NalogRuDIProvider
 from syngrapha.bootstrap.di.uow import UoWDIProvider
 from syngrapha.bootstrap.di.user import UserDIProvider
 from syngrapha.config import Config
 from syngrapha.presentation.http.errors import handlers
+from syngrapha.presentation.http.nalog import AuthNalogController
 from syngrapha.presentation.http.user import AuthController
 
 
@@ -30,6 +34,8 @@ def _create_container(config: Config) -> AsyncContainer:
         UoWDIProvider(),
         UserDIProvider(),
         HeaderTokenDIProvider(),
+        NalogRuDIProvider(),
+        AuthNalogDIProvider(),
         context={
             Config: config
         },
@@ -67,6 +73,7 @@ def create_app() -> Litestar:
         debug=True,
         route_handlers=[
             AuthController,
+            AuthNalogController
         ],
         middleware=[],
         exception_handlers=handlers,  # type: ignore
@@ -78,6 +85,15 @@ def create_app() -> Litestar:
                 SwaggerRenderPlugin(),
             ],
             path="/docs",
+            components=Components(
+                security_schemes={
+                    "jwt_auth": SecurityScheme(
+                        type="apiKey",
+                        name="Authorization",
+                        security_scheme_in="header",
+                    )
+                }
+            )
         ),
         logging_config=logging_config,
     )
