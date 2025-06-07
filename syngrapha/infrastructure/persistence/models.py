@@ -57,3 +57,44 @@ class UserAuthTokenModel(Base):
         default=datetime.now,
         server_default=current_timestamp()
     )
+
+
+@final
+class TransactionModel(Base):
+    """Table for transactions."""
+
+    __tablename__ = "transactions"
+
+    uuid: Mapped[str] = mapped_column(
+        "uuid",
+        Uuid,
+        primary_key=True,
+    )
+    user_id: Mapped[str] = mapped_column(
+        "user_id",
+        ForeignKey("users.uuid")
+    )
+    user: Mapped[UserModel] = relationship()
+    deal_at: Mapped[datetime]
+    merchant: Mapped[str]
+
+
+@final
+class ProductModel(Base):
+    """Table for product entries."""
+
+    __tablename__ = "products"
+
+    uuid: Mapped[str] = mapped_column(
+        "uuid",
+        Uuid,
+        primary_key=True,
+    )
+    transaction_id: Mapped[str] = mapped_column(
+        "transaction_id",
+        ForeignKey("transactions.uuid")
+    )
+    transaction: Mapped[TransactionModel] = relationship()
+    name: Mapped[str]
+    price: Mapped[int]
+    quantity: Mapped[int]

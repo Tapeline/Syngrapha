@@ -49,7 +49,7 @@ class QRImportInteractor:
             products=products,
             time_of_deal=receipt.created_at,
             merchant=receipt.merchant,
-            owner=user
+            owner=user_id
         )
         async with self.uow:
             await self.transaction_gateway.save_transaction(transaction)
