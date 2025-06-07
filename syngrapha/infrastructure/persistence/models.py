@@ -77,6 +77,9 @@ class TransactionModel(Base):
     user: Mapped[UserModel] = relationship()
     deal_at: Mapped[datetime]
     merchant: Mapped[str]
+    products: Mapped[list["ProductModel"]] = relationship(
+        back_populates="transaction"
+    )
 
 
 @final
@@ -94,7 +97,11 @@ class ProductModel(Base):
         "transaction_id",
         ForeignKey("transactions.uuid")
     )
-    transaction: Mapped[TransactionModel] = relationship()
+    transaction: Mapped[TransactionModel] = relationship(
+        TransactionModel, back_populates="products"
+    )
     name: Mapped[str]
     price: Mapped[int]
     quantity: Mapped[int]
+    category: Mapped[str]
+    auto_cat_state: Mapped[str]

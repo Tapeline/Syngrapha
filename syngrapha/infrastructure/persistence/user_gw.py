@@ -55,3 +55,11 @@ class UserGatewayImpl(UserGateway):
             await self.uow.session.execute(query)
         except NoResultFound as exc:
             raise UserNotFound(user.id) from exc
+
+    @impl
+    async def lock(self, user_id: UserId) -> None:
+        await self.uow.session.execute(
+            select(UserModel)
+            .where(UserModel.uuid == user_id)
+            .with_for_update()
+        )

@@ -1,5 +1,6 @@
 import operator
 import uuid
+from collections.abc import Collection
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
@@ -12,6 +13,8 @@ from syngrapha.domain.user import UserId
 
 type TransactionId = uuid.UUID
 type MerchantName = str
+
+_TRANSACTION_EQ_DELTA_S = 5
 
 
 @dataclass(slots=True)
@@ -41,12 +44,23 @@ class Transaction:
         self_time = int(self.time_of_deal.timestamp())
         other_time = int(other.time_of_deal.timestamp())
         return (
-            self_time == other_time and self.cost == other.cost
+            abs(self_time - other_time) < _TRANSACTION_EQ_DELTA_S
+            and self.cost == other.cost
         )
 
     def __hash__(self) -> int:
         """Hash the transaction."""
         return hash((
-            int(self.time_of_deal.timestamp()),
-            int(self.cost.as_float * self.cost.multiplier)
+            #int(self.time_of_deal.timestamp()),
+            int(self.cost.as_float * self.cost.multiplier),
         ))
+
+
+def deduplicate_transactions(
+        *transactions: Collection[Transaction]
+) -> Collection[Transaction]:
+    """Deduplicates transactions using set."""
+    t_set: set[Transaction] = set()
+    for transaction_collection in transactions:
+        t_set.update(transaction_collection)
+    return t_set

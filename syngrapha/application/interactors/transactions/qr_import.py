@@ -29,29 +29,30 @@ class QRImportInteractor:
     @impl
     async def __call__(self, qr_code: str) -> None:
         user_id = await self.user_idp.get_user()
-        user = await self.user_gw.get_by_id(user_id)
-        receipt = await self.nalog_client.get_receipt(
-            user.nalog_access_token, qr_code
-        )
-        products = [
-            Product(
-                id=self.id_gen(),
-                product=rec_item.name,
-                quantity=rec_item.quantity,
-                category=None,
-                price=rec_item.price,
-                auto_cat_state=AutoCategorizingState.IN_PROCESS
-            )
-            for rec_item in receipt.items
-        ]
-        transaction = Transaction(
-            id=self.id_gen(),
-            products=products,
-            time_of_deal=receipt.created_at,
-            merchant=receipt.merchant,
-            owner=user_id
-        )
         async with self.uow:
+            user = await self.user_gw.get_by_id(user_id)
+            await self.user_gw.lock(user_id)
+            receipt = await self.nalog_client.get_receipt(
+                user.nalog_access_token, qr_code
+            )
+            products = [
+                Product(
+                    id=self.id_gen(),
+                    product=rec_item.name,
+                    quantity=rec_item.quantity,
+                    category=None,
+                    price=rec_item.price,
+                    auto_cat_state=AutoCategorizingState.IN_PROCESS
+                )
+                for rec_item in receipt.items
+            ]
+            transaction = Transaction(
+                id=self.id_gen(),
+                products=products,
+                time_of_deal=receipt.created_at,
+                merchant=receipt.merchant,
+                owner=user_id
+            )
             await self.transaction_gateway.save_transaction(transaction)
             await self.ai_categorizer.notify_need_to_categorize(
                 {prod.id for prod in products}

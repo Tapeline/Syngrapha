@@ -34,3 +34,14 @@ class UserGateway(Protocol):
 
         """
         raise NotImplementedError
+
+    @abstractmethod
+    async def lock(self, user_id: UserId) -> None:
+        """
+        Lock user by its id.
+
+        Args:
+            user_id: target user id
+
+        """
+        raise NotImplementedError
