@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import final
+from typing import List, final
 
 from sqlalchemy import DateTime, ForeignKey, String, Uuid
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -77,8 +77,8 @@ class TransactionModel(Base):
     user: Mapped[UserModel] = relationship()
     deal_at: Mapped[datetime]
     merchant: Mapped[str]
-    products: Mapped[list["ProductModel"]] = relationship(
-        back_populates="transaction"
+    products: Mapped[List["ProductModel"]] = relationship(
+        back_populates="transaction", lazy="selectin"
     )
 
 
@@ -102,6 +102,9 @@ class ProductModel(Base):
     )
     name: Mapped[str]
     price: Mapped[int]
-    quantity: Mapped[int]
-    category: Mapped[str]
+    quantity: Mapped[float]
+    category: Mapped[str | None] = mapped_column(
+        "category",
+        nullable=True
+    )
     auto_cat_state: Mapped[str]

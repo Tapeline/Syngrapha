@@ -62,9 +62,9 @@ class NalogClientImpl(NalogClient):
                     "code": code
                 },
             ) as response:
-                data = await response.json()
                 if response.status // 100 != 2:
                     return None
+                data = await response.json()
                 return data.get("sessionId")
 
     async def _get_receipt_id(
@@ -78,11 +78,11 @@ class NalogClientImpl(NalogClient):
             json={"qr": code},
             headers={"sessionId": access_token}
         ) as response:
-            data = await response.json()
             if response.status == 401:
                 raise NalogTokenRequiresReAuth
             elif response.status // 100 != 2:
                 raise NalogReturnedError
+            data = await response.json()
             return data["id"]
 
     async def get_receipt(
@@ -101,11 +101,11 @@ class NalogClientImpl(NalogClient):
                     "Content-Type": "application/json"
                 }
             ) as response:
-                data = await response.json()
                 if response.status == 401:
                     raise NalogTokenRequiresReAuth
                 elif response.status // 100 != 2:
                     raise NalogReturnedError
+                data = await response.json()
                 try:
                     return _load_receipt(data)
                 except KeyError:

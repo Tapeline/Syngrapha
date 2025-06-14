@@ -9,16 +9,19 @@ from litestar.openapi import OpenAPIConfig
 from litestar.openapi.plugins import SwaggerRenderPlugin
 from litestar.openapi.spec import Components, SecurityScheme
 
+from syngrapha.bootstrap.di.ai import AICategorizerDIProvider
 from syngrapha.bootstrap.di.algorithms import AlgorithmsDIProvider
 from syngrapha.bootstrap.di.auth import HeaderTokenDIProvider
 from syngrapha.bootstrap.di.auth_nalog import AuthNalogDIProvider
 from syngrapha.bootstrap.di.config import ConfigDIProvider
 from syngrapha.bootstrap.di.nalogru import NalogRuDIProvider
+from syngrapha.bootstrap.di.transactions import TransactionDIProvider
 from syngrapha.bootstrap.di.uow import UoWDIProvider
 from syngrapha.bootstrap.di.user import UserDIProvider
 from syngrapha.config import Config
 from syngrapha.presentation.http.errors import handlers
 from syngrapha.presentation.http.nalog import AuthNalogController
+from syngrapha.presentation.http.transactions import TransactionsController
 from syngrapha.presentation.http.user import AuthController
 
 
@@ -36,6 +39,8 @@ def _create_container(config: Config) -> AsyncContainer:
         HeaderTokenDIProvider(),
         NalogRuDIProvider(),
         AuthNalogDIProvider(),
+        TransactionDIProvider(),
+        AICategorizerDIProvider(),
         context={
             Config: config
         },
@@ -73,7 +78,8 @@ def create_app() -> Litestar:
         debug=True,
         route_handlers=[
             AuthController,
-            AuthNalogController
+            AuthNalogController,
+            TransactionsController,
         ],
         middleware=[],
         exception_handlers=handlers,  # type: ignore

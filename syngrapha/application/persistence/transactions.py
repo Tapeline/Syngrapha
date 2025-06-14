@@ -1,5 +1,6 @@
 from abc import abstractmethod
 from collections.abc import Collection
+from datetime import datetime
 from typing import Protocol
 
 from syngrapha.domain.transaction.transaction import Transaction
@@ -21,11 +22,18 @@ class TransactionGateway(Protocol):
         raise NotImplementedError
 
     @abstractmethod
-    async def get_of_user(self, user_id: UserId) -> Collection[Transaction]:
+    async def get_of_user(
+            self,
+            user_id: UserId,
+            since: datetime | None = None,
+            before: datetime | None = None
+    ) -> Collection[Transaction]:
         """
         Get all transactions owned by the given user.
 
         Args:
+            since: from what time
+            before: to what time
             user_id: target user id
 
         Returns: list of transactions

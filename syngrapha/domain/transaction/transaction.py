@@ -33,7 +33,7 @@ class Transaction:
         """Calculated cost (sum of products' costs)."""
         return Money.from_decimal(reduce(
             operator.add,
-            (product.cost for product in self.products),
+            (product.cost.as_decimal for product in self.products),
             Decimal(0)
         ))
 

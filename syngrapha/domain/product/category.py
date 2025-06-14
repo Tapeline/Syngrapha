@@ -47,6 +47,15 @@ CATEGORY_NESTING: Final = MappingProxyType({
         Category.DRINKS,
         Category.OTHER,
     },
+    CategoryGroup.HEALTH_AND_CARE: set(),
+    CategoryGroup.TRANSPORTATION: set(),
+    CategoryGroup.CLOTHING: set(),
+    CategoryGroup.HOME: set(),
+    CategoryGroup.RESTAURANTS: set(),
+    CategoryGroup.TELECOMMUNICATIONS: set(),
+    CategoryGroup.UTILITY_BILLS: set(),
+    CategoryGroup.STUDYING: set(),
+    CategoryGroup.OTHER: set(),
 })
 
 GROUP_OF: Final[Mapping[Category, CategoryGroup]] = MappingProxyType(

@@ -19,7 +19,7 @@ class TableImportInteractor:
 
     user_idp: UserIdProvider
     user_gw: UserGateway
-    transaction_gateway: TransactionGateway
+    transaction_gw: TransactionGateway
     id_gen: UUIDGenerator
     uow: UoW
     ai_categorizer: AICategorizerService
@@ -36,10 +36,10 @@ class TableImportInteractor:
             table = assemble_table(table_repr)
             new_transactions = loader.load(self.id_gen, user_id, table)
             existing_transactions = await (
-                self.transaction_gateway.get_of_user(user_id)
+                self.transaction_gw.get_of_user(user_id)
             )
             merged_transactions = deduplicate_transactions(
                 existing_transactions, new_transactions
             )
             for transaction in merged_transactions:
-                await self.transaction_gateway.save_transaction(transaction)
+                await self.transaction_gw.save_transaction(transaction)

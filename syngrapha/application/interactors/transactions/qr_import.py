@@ -20,14 +20,14 @@ class QRImportInteractor:
 
     user_idp: UserIdProvider
     nalog_client: NalogClient
-    transaction_gateway: TransactionGateway
+    transaction_gw: TransactionGateway
     id_gen: UUIDGenerator
     uow: UoW
     ai_categorizer: AICategorizerService
     user_gw: UserGateway
 
     @impl
-    async def __call__(self, qr_code: str) -> None:
+    async def __call__(self, qr_code: str) -> Transaction:
         user_id = await self.user_idp.get_user()
         async with self.uow:
             user = await self.user_gw.get_by_id(user_id)
@@ -53,7 +53,8 @@ class QRImportInteractor:
                 merchant=receipt.merchant,
                 owner=user_id
             )
-            await self.transaction_gateway.save_transaction(transaction)
+            await self.transaction_gw.save_transaction(transaction)
             await self.ai_categorizer.notify_need_to_categorize(
                 {prod.id for prod in products}
             )
+            return transaction

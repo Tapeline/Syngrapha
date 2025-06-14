@@ -15,6 +15,11 @@ class Money:
     multiplier: int
 
     @property
+    def as_x100_int(self) -> int:
+        canonical_value = self.as_decimal
+        return int((canonical_value * 100).to_integral_value())
+
+    @property
     def as_float(self) -> float:
         """Return float representation."""
         return self.value / self.multiplier

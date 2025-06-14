@@ -1,8 +1,11 @@
 import uuid
+from dataclasses import dataclass
+from datetime import datetime
 from decimal import Decimal
 from typing import Collection, cast
 
 from sqlalchemy import select
+from sqlalchemy.orm import joinedload, selectinload
 
 from syngrapha.application.persistence.transactions import TransactionGateway
 from syngrapha.domain.money import Money
@@ -15,6 +18,7 @@ from syngrapha.infrastructure.persistence.uow import SAUoW
 from syngrapha.utils.decorator import impl
 
 
+@dataclass(slots=True)
 class TransactionGatewayImpl(TransactionGateway):
     """Impl."""
 
@@ -29,6 +33,12 @@ class TransactionGatewayImpl(TransactionGateway):
                 name=prod.product,
                 price=int((prod.price.as_decimal * 100).to_integral_value()),
                 quantity=prod.quantity,
+                auto_cat_state=prod.auto_cat_state.value,
+                category=(
+                    prod.category.value
+                    if prod.category
+                    else None
+                )
             )
             for prod in transaction.products
         ]
@@ -38,10 +48,18 @@ class TransactionGatewayImpl(TransactionGateway):
             merchant=transaction.merchant,
             user_id=transaction.owner
         )
-        self.uow.session.add(trans_model, *prod_models)
+        self.uow.session.add_all([*prod_models, trans_model])
 
-    async def get_of_user(self, user_id: UserId) -> Collection[Transaction]:
-        t_qry = select(TransactionModel).where(TransactionModel.user_id == user_id)
+    async def get_of_user(
+            self, user_id: UserId,
+            since: datetime | None = None,
+            before: datetime | None = None
+    ) -> Collection[Transaction]:
+        t_qry = (
+            select(TransactionModel)
+            .options(selectinload(TransactionModel.products))
+            .where(TransactionModel.user_id == user_id)
+        )
         result = await self.uow.session.execute(t_qry)
         return [
             Transaction(
@@ -58,8 +76,14 @@ class TransactionGatewayImpl(TransactionGateway):
                             Decimal(product.price) / 100,
                             multiplier=100
                         ),
-                        category=Category(product.category),
-                        auto_cat_state=AutoCategorizingState(product.auto_cat_state),
+                        category=(
+                            Category(product.category)
+                            if product.category
+                            else None
+                        ),
+                        auto_cat_state=AutoCategorizingState(
+                            product.auto_cat_state
+                        ),
                     )
                     for product in transaction.products
                 ]

@@ -1,6 +1,7 @@
 import enum
 import uuid
 from dataclasses import dataclass
+from decimal import Decimal
 from typing import final
 
 from syngrapha.domain.money import Money
@@ -8,15 +9,15 @@ from syngrapha.domain.product.category import Category
 
 type ProductId = uuid.UUID
 type ProductName = str
-type ItemQuantity = int
+type ItemQuantity = float
 
 
 @final
 class AutoCategorizingState(enum.Enum):
     """State of autocategorizer on that product."""
 
-    IN_PROCESS = enum.auto()
-    MARKED = enum.auto()
+    IN_PROCESS = "IN_PROCESS"
+    MARKED = "MARKED"
 
 
 @dataclass(slots=True)
@@ -34,4 +35,6 @@ class Product:
     @property
     def cost(self) -> Money:
         """Calculated cost from price and quantity."""
-        return Money.from_decimal(self.price.as_decimal * self.quantity)
+        return Money.from_decimal(
+            self.price.as_decimal * Decimal(self.quantity)
+        )
