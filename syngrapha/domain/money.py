@@ -16,6 +16,7 @@ class Money:
 
     @property
     def as_x100_int(self) -> int:
+        """Return representation as int(self * 100) (x100 format)."""
         canonical_value = self.as_decimal
         return int((canonical_value * 100).to_integral_value())
 

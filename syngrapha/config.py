@@ -42,5 +42,5 @@ class Config(BaseModel):
         default_factory=lambda: SecurityConfig(**os.environ)  # type: ignore
     )
     nalog: NalogConfig = Field(
-        default_factory=lambda: NalogConfig(**os.environ)  # type: ignore
+        default_factory=lambda: NalogConfig(**os.environ)
     )

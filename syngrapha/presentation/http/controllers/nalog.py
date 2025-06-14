@@ -1,22 +1,18 @@
-import uuid
 
 from dishka import FromDishka
 from dishka.integrations.litestar import inject
-from litestar import Controller, delete, get, post
+from litestar import Controller, get, post
 from pydantic import BaseModel
 
-from syngrapha.application.interactors.auth.login import LoginInteractor
-from syngrapha.application.interactors.auth.logout import (
-    RevokeTokensInteractor,
+from syngrapha.application.interactors.auth_nalog.check_token import (
+    CheckNalogAuthTokenInteractor,
 )
-from syngrapha.application.interactors.auth.profile import GetProfileInteractor
-from syngrapha.application.interactors.auth.register import RegisterInteractor
-from syngrapha.application.interactors.auth_nalog.check_token import \
-    CheckNalogAuthTokenInteractor
-from syngrapha.application.interactors.auth_nalog.request_code import \
-    RequestNalogAuthCodeInteractor
-from syngrapha.application.interactors.auth_nalog.submit_code import \
-    SubmitNalogAuthCodeInteractor
+from syngrapha.application.interactors.auth_nalog.request_code import (
+    RequestNalogAuthCodeInteractor,
+)
+from syngrapha.application.interactors.auth_nalog.submit_code import (
+    SubmitNalogAuthCodeInteractor,
+)
 from syngrapha.presentation.http.framework.openapi import (
     error_spec,
     success_spec,

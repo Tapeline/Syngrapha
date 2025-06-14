@@ -1,19 +1,23 @@
 import uuid
+from collections.abc import Collection
 from dataclasses import dataclass
 from datetime import datetime
 from decimal import Decimal
-from typing import Collection, cast
+from typing import cast
 
 from sqlalchemy import select
-from sqlalchemy.orm import joinedload, selectinload
+from sqlalchemy.orm import selectinload
 
 from syngrapha.application.persistence.transactions import TransactionGateway
 from syngrapha.domain.money import Money
 from syngrapha.domain.product.category import Category
-from syngrapha.domain.product.product import Product, AutoCategorizingState
+from syngrapha.domain.product.product import AutoCategorizingState, Product
 from syngrapha.domain.transaction.transaction import Transaction
 from syngrapha.domain.user import UserId
-from syngrapha.infrastructure.persistence.models import ProductModel, TransactionModel
+from syngrapha.infrastructure.persistence.models import (
+    ProductModel,
+    TransactionModel,
+)
 from syngrapha.infrastructure.persistence.uow import SAUoW
 from syngrapha.utils.decorator import impl
 
@@ -50,6 +54,7 @@ class TransactionGatewayImpl(TransactionGateway):
         )
         self.uow.session.add_all([*prod_models, trans_model])
 
+    @impl
     async def get_of_user(
             self, user_id: UserId,
             since: datetime | None = None,

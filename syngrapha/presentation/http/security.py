@@ -1,4 +1,3 @@
-from types import MappingProxyType
 from typing import Any, Final
 
 from litestar import Request
@@ -6,7 +5,8 @@ from litestar.openapi.spec import SecurityScheme
 
 from syngrapha.application.auth.auth import (
     TokenCredStoreIdProvider,
-    UserCredentialStore, UserIdProvider,
+    UserCredentialStore,
+    UserIdProvider,
 )
 
 security_components: Final = {
@@ -22,7 +22,9 @@ security_components: Final = {
     )
 }
 
-security_defs: Final = (
+security_defs: Final[  # noqa: WPS234
+    tuple[dict[str, list[Any]], ...]
+] = (
     {"jwt_auth": []},
     {"cookie_auth": []}
 )

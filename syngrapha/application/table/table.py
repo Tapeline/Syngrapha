@@ -1,16 +1,19 @@
 import re
 from dataclasses import dataclass
-from typing import final, Any
+from typing import final
 
 
 @dataclass(slots=True)
 @final
 class Table:
+    """Helper class for manipulating tables."""
+
     column_names: list[str]
     rows: list[list[str]]
 
     @property
     def columns(self) -> list[list[str]]:
+        """Return transposed table: first index -- columns."""
         return [
             [self.rows[row][col] for row in range(len(self.rows))]
             for col in range(len(self.column_names))
@@ -32,6 +35,3 @@ class Table:
             if pattern.match(col_name):
                 return col
         return None
-
-    def __index__(self, index: Any) -> list[str]:
-        return self.rows[index]

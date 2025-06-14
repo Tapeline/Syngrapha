@@ -1,6 +1,8 @@
 [flake8]
 
 max-imports = 16
+max-awaits = 8
+max-local-variables = 10
 
 
 allowed-domain-names =
@@ -8,6 +10,7 @@ allowed-domain-names =
     result
     data
     value
+    P
 
 
 exclude =
@@ -18,6 +21,13 @@ ignore =
     WPS430
     # i like nested functions
 
+    W503
+    # Some strange thing that cannot be fixed:
+    # return (
+    #     abs(self_time - other_time) < _TRANSACTION_EQ_DELTA_S
+    #     and self.cost == other.cost
+    # )
+
 
 per-file-ignores =
     syngrapha/infrastructure/persistence/database.py: WPS432
@@ -26,6 +36,13 @@ per-file-ignores =
     # These are configs by themselves
 
     syngrapha/bootstrap/app.py: WPS201
+    # Bootstrap module will have a lot of imports anyway
+
+    syngrapha/infrastructure/persistence/transaction_gw.py: WPS201
+    # Legit use of many imports
+
+    syngrapha/presentation/http/controllers/__init__.py: WPS412
+    # I like to group route handlers in a constant
 
     syngrapha/bootstrap/di/**: WPS347
     # from_context is good

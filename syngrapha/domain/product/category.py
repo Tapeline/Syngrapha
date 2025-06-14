@@ -1,7 +1,8 @@
+from collections.abc import Mapping
 from enum import Enum
 from functools import reduce
 from types import MappingProxyType
-from typing import Final, Mapping, final
+from typing import Final, final
 
 
 @final

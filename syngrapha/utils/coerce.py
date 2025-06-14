@@ -1,6 +1,6 @@
 from adaptix import Provider
-from adaptix.conversion import link
 from adaptix._internal.provider.loc_stack_filtering import Pred
+from adaptix.conversion import link
 
 from syngrapha.utils.func import identity
 

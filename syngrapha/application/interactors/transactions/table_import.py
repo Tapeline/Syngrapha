@@ -1,3 +1,4 @@
+import asyncio
 from typing import final
 
 from syngrapha.application.auth.auth import UserIdProvider
@@ -7,7 +8,10 @@ from syngrapha.application.interactors.common import interactor
 from syngrapha.application.persistence.transactions import TransactionGateway
 from syngrapha.application.persistence.uow import UoW
 from syngrapha.application.persistence.user import UserGateway
-from syngrapha.application.table.data_assembler import assemble_table, DataLoader
+from syngrapha.application.table.data_assembler import (
+    DataLoader,
+    assemble_table,
+)
 from syngrapha.domain.transaction.transaction import deduplicate_transactions
 from syngrapha.utils.decorator import impl
 
@@ -41,5 +45,9 @@ class TableImportInteractor:
             merged_transactions = deduplicate_transactions(
                 existing_transactions, new_transactions
             )
-            for transaction in merged_transactions:
-                await self.transaction_gw.save_transaction(transaction)
+            await asyncio.gather(
+                *(
+                    self.transaction_gw.save_transaction(transaction)
+                    for transaction in merged_transactions
+                )
+            )

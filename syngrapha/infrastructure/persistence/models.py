@@ -1,5 +1,5 @@
 from datetime import datetime
-from typing import List, final
+from typing import final
 
 from sqlalchemy import DateTime, ForeignKey, String, Uuid
 from sqlalchemy.orm import DeclarativeBase, Mapped, mapped_column, relationship
@@ -77,7 +77,7 @@ class TransactionModel(Base):
     user: Mapped[UserModel] = relationship()
     deal_at: Mapped[datetime]
     merchant: Mapped[str]
-    products: Mapped[List["ProductModel"]] = relationship(
+    products: Mapped[list["ProductModel"]] = relationship(
         back_populates="transaction", lazy="selectin"
     )
 

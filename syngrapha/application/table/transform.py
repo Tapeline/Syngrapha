@@ -1,16 +1,16 @@
-from collections.abc import Callable
+from collections.abc import Callable, Mapping
 from datetime import datetime
 from decimal import Decimal
 from types import MappingProxyType
-from typing import Final, Mapping, Any
+from typing import Any, Final
 
 from syngrapha.domain.money import Money
 
-type Transformer[T] = Callable[[str], T]
+type Transformer[Ret_Typ] = Callable[[str], Ret_Typ]
 
 
 def money_tf(data: str) -> Money:
-    """Transform money into x100 format"""
+    """Transform money into x100 format."""
     dec = Decimal(data) / 100
     return Money.from_decimal(dec, multiplier=100)
 
@@ -25,7 +25,9 @@ def int_tf(data: str) -> int:
     return int(data)
 
 
-TRANSFORMERS: Final[Mapping[str, Transformer[Any]]] = MappingProxyType({
+TRANSFORMERS: Final[  # noqa: WPS234
+    Mapping[str, Transformer[Any]]
+] = MappingProxyType({
     "money": money_tf,
     "iso_date": iso_date_tf,
     "int": int_tf,

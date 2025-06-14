@@ -5,7 +5,7 @@ from typing import Any, Final, NewType
 import inflection
 from litestar import Request, Response
 
-_InferCodeType: Final = NewType("_InferCodeType", str)
+_InferCodeType = NewType("_InferCodeType", str)
 infer_code: Final = _InferCodeType("")
 
 type StatusCode = int
@@ -22,14 +22,14 @@ type LitestarErrHandler = Callable[
 ]
 
 
-def _default_enricher(_) -> dict:
+def _default_enricher(_: Any) -> dict[Any, Any]:
     return {}
 
 
 def _create_handler(handler_def: HandlerDef) -> LitestarErrHandler:
-    enricher = _default_enricher
-    status = 0
-    code = ""
+    enricher: ErrorEnricher[Any] = _default_enricher
+    status: int = 0
+    code: str = ""
     if len(handler_def) == 2:
         status, code = handler_def
     else:

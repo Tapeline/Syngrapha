@@ -43,7 +43,9 @@ class NalogClient(Protocol):
     """Interface for interacting with nalog.ru's IRKKT."""
 
     @abstractmethod
-    async def check_token_valid(self, access_token: NalogToken) -> bool:
+    async def check_token_valid(
+            self, access_token: NalogToken | None
+    ) -> bool:
         """Check if access token is valid."""
 
     @abstractmethod

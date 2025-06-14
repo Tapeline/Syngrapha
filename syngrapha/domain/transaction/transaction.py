@@ -50,10 +50,9 @@ class Transaction:
 
     def __hash__(self) -> int:
         """Hash the transaction."""
-        return hash((
-            #int(self.time_of_deal.timestamp()),
-            int(self.cost.as_float * self.cost.multiplier),
-        ))
+        return hash(
+            int(self.cost.as_float * self.cost.multiplier)
+        )
 
 
 def deduplicate_transactions(

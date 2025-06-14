@@ -10,8 +10,9 @@ from syngrapha.application.external.nalog import (
     NalogReturnedError,
     NalogTokenRequiresReAuth,
 )
-from syngrapha.application.interactors.auth_nalog.submit_code import \
-    InvalidNalogSMSCode
+from syngrapha.application.interactors.auth_nalog.submit_code import (
+    InvalidNalogSMSCode,
+)
 from syngrapha.presentation.http.framework.errors import (
     gen_handler_mapping,
     infer_code,

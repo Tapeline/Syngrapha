@@ -18,7 +18,6 @@ from syngrapha.bootstrap.di.user import UserDIProvider
 from syngrapha.config import Config
 from syngrapha.presentation.http.controllers import route_handlers
 from syngrapha.presentation.http.errors import handlers
-
 from syngrapha.presentation.http.openapi import app_openapi_config
 
 

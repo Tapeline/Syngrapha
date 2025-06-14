@@ -2,8 +2,9 @@ from dishka import Provider, Scope, provide, provide_all
 
 from syngrapha.application.auth.auth import UserCredentialStore
 from syngrapha.application.interactors.auth.login import LoginInteractor
-from syngrapha.application.interactors.auth.logout import \
-    RevokeTokensInteractor
+from syngrapha.application.interactors.auth.logout import (
+    RevokeTokensInteractor,
+)
 from syngrapha.application.interactors.auth.profile import GetProfileInteractor
 from syngrapha.application.interactors.auth.register import RegisterInteractor
 from syngrapha.application.persistence.user import UserGateway

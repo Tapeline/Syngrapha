@@ -2,7 +2,10 @@ from typing import final
 
 from syngrapha.application.auth.auth import UserIdProvider
 from syngrapha.application.external.ai_categorizer import AICategorizerService
-from syngrapha.application.external.nalog import NalogClient
+from syngrapha.application.external.nalog import (
+    NalogClient,
+    NalogTokenRequiresReAuth,
+)
 from syngrapha.application.identifier import UUIDGenerator
 from syngrapha.application.interactors.common import interactor
 from syngrapha.application.persistence.transactions import TransactionGateway
@@ -31,9 +34,14 @@ class QRImportInteractor:
         user_id = await self.user_idp.get_user()
         async with self.uow:
             user = await self.user_gw.get_by_id(user_id)
+            token_valid = await self.nalog_client.check_token_valid(
+                user.nalog_access_token
+            )
+            if not token_valid:
+                raise NalogTokenRequiresReAuth
             await self.user_gw.lock(user_id)
             receipt = await self.nalog_client.get_receipt(
-                user.nalog_access_token, qr_code
+                user.nalog_access_token or "", qr_code
             )
             products = [
                 Product(

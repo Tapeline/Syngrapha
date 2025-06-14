@@ -86,7 +86,7 @@ exclude = [
     "S603", # do not require `shell=True`
     "S607", # partial executable paths
 ]
-"syngrapha/presentation/http/user.py" = ["D"]
+"syngrapha/presentation/http/*.py" = ["D101", "D102"]
 
 [lint.pydocstyle]
 ignore-decorators = ["syngrapha.utils.decorator.impl"]

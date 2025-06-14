@@ -6,10 +6,12 @@ from dishka.integrations.litestar import inject
 from litestar import Controller, get, post
 from pydantic import BaseModel
 
-from syngrapha.application.interactors.transactions.get_transactions import \
-    GetMyTransactionsInteractor
-from syngrapha.application.interactors.transactions.qr_import import \
-    QRImportInteractor
+from syngrapha.application.interactors.transactions.get_transactions import (
+    GetMyTransactionsInteractor,
+)
+from syngrapha.application.interactors.transactions.qr_import import (
+    QRImportInteractor,
+)
 from syngrapha.domain.transaction.transaction import Transaction
 from syngrapha.presentation.http.framework.openapi import (
     error_spec,

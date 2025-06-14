@@ -1,7 +1,7 @@
 from dataclasses import dataclass
 
-from adaptix import P, Retort
-from adaptix.conversion import get_converter, link, coercer
+from adaptix import P, Retort  # noqa: WPS347
+from adaptix.conversion import get_converter
 from sqlalchemy import select, update
 from sqlalchemy.exc import NoResultFound
 
@@ -12,7 +12,6 @@ from syngrapha.infrastructure.persistence.models import UserModel
 from syngrapha.infrastructure.persistence.uow import SAUoW
 from syngrapha.utils.coerce import id_link
 from syngrapha.utils.decorator import impl
-
 
 _convert_user = get_converter(
     src=UserModel,
