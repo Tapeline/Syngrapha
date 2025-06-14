@@ -2,7 +2,8 @@ import uuid
 
 from dishka import FromDishka
 from dishka.integrations.litestar import inject
-from litestar import Controller, delete, get, post
+from litestar import Controller, Response, delete, get, post
+from litestar.datastructures import Cookie
 from pydantic import BaseModel
 
 from syngrapha.application.interactors.auth.login import LoginInteractor
@@ -11,10 +12,12 @@ from syngrapha.application.interactors.auth.logout import (
 )
 from syngrapha.application.interactors.auth.profile import GetProfileInteractor
 from syngrapha.application.interactors.auth.register import RegisterInteractor
+from syngrapha.config import SecurityConfig
 from syngrapha.presentation.http.framework.openapi import (
     error_spec,
     success_spec,
 )
+from syngrapha.presentation.http.security import security_defs
 
 
 class LoginSchema(BaseModel):
@@ -54,17 +57,38 @@ class AuthController(Controller):
         responses={
             200: success_spec("Login successful.", TokenResponse),
             404: error_spec("Credentials are invalid."),
-        }
+        },
+        response_cookies=[
+            Cookie(
+                key="SESSION_ID",
+                description="the same auth token as returned by response",
+                documentation_only=True,
+            )
+        ],
     )
     @inject
     async def login(
             self, *,
             data: LoginSchema,
-            interactor: FromDishka[LoginInteractor]
-    ) -> TokenResponse:
+            interactor: FromDishka[LoginInteractor],
+            security_config: FromDishka[SecurityConfig],
+    ) -> Response[TokenResponse]:
         """Login a user."""
         token = await interactor(data.username, data.password)
-        return TokenResponse(token=token)
+        return Response(
+            TokenResponse(token=token),
+            cookies=[
+                Cookie(
+                    key="SESSION_ID",
+                    value=token,
+                    expires=int(
+                        security_config.token_lifetime.total_seconds()
+                    ),
+                    httponly=True,
+                    secure=True
+                )
+            ]
+        )
 
     @post(
         path="/register",
@@ -101,7 +125,7 @@ class AuthController(Controller):
             200: success_spec("Success.", ProfileResponse),
             401: error_spec("Not authenticated."),
         },
-        security=[{"jwt_auth": []}]
+        security=security_defs
     )
     @inject
     async def get_profile(

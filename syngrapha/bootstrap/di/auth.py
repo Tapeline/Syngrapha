@@ -1,15 +1,14 @@
-
 from dishka import Provider, Scope, provide
 from litestar import Request
 
 from syngrapha.application.auth.auth import (
-    TokenCredStoreIdProvider,
     UserCredentialStore,
     UserIdProvider,
 )
+from syngrapha.presentation.http.security import authenticate_user
 
 
-class HeaderTokenDIProvider(Provider):
+class AuthTokenDIProvider(Provider):
     """Provider of id provider."""
 
     @provide(scope=Scope.REQUEST)
@@ -18,11 +17,5 @@ class HeaderTokenDIProvider(Provider):
             request: Request,  # type: ignore
             cred_store: UserCredentialStore,
     ) -> UserIdProvider:
-        """Create identity provider from request headers."""
-        auth_header = request.headers.get("authorization")
-        if auth_header:
-            auth_header = str(auth_header).removeprefix("Bearer").strip()
-        return TokenCredStoreIdProvider(
-            cred_store=cred_store,
-            token=auth_header or ""
-        )
+        """Create identity provider from request headers or cookies."""
+        return authenticate_user(cred_store, request)

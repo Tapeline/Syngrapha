@@ -5,13 +5,10 @@ from dishka import AsyncContainer, make_async_container
 from dishka.integrations.litestar import LitestarProvider, setup_dishka
 from litestar import Litestar
 from litestar.logging import LoggingConfig
-from litestar.openapi import OpenAPIConfig
-from litestar.openapi.plugins import SwaggerRenderPlugin
-from litestar.openapi.spec import Components, SecurityScheme
 
 from syngrapha.bootstrap.di.ai import AICategorizerDIProvider
 from syngrapha.bootstrap.di.algorithms import AlgorithmsDIProvider
-from syngrapha.bootstrap.di.auth import HeaderTokenDIProvider
+from syngrapha.bootstrap.di.auth import AuthTokenDIProvider
 from syngrapha.bootstrap.di.auth_nalog import AuthNalogDIProvider
 from syngrapha.bootstrap.di.config import ConfigDIProvider
 from syngrapha.bootstrap.di.nalogru import NalogRuDIProvider
@@ -19,10 +16,10 @@ from syngrapha.bootstrap.di.transactions import TransactionDIProvider
 from syngrapha.bootstrap.di.uow import UoWDIProvider
 from syngrapha.bootstrap.di.user import UserDIProvider
 from syngrapha.config import Config
+from syngrapha.presentation.http.controllers import route_handlers
 from syngrapha.presentation.http.errors import handlers
-from syngrapha.presentation.http.nalog import AuthNalogController
-from syngrapha.presentation.http.transactions import TransactionsController
-from syngrapha.presentation.http.user import AuthController
+
+from syngrapha.presentation.http.openapi import app_openapi_config
 
 
 def _create_config() -> Config:
@@ -36,7 +33,7 @@ def _create_container(config: Config) -> AsyncContainer:
         AlgorithmsDIProvider(),
         UoWDIProvider(),
         UserDIProvider(),
-        HeaderTokenDIProvider(),
+        AuthTokenDIProvider(),
         NalogRuDIProvider(),
         AuthNalogDIProvider(),
         TransactionDIProvider(),
@@ -76,31 +73,10 @@ def create_app() -> Litestar:
     logging_config = _create_logging_config()
     litestar_app = Litestar(
         debug=True,
-        route_handlers=[
-            AuthController,
-            AuthNalogController,
-            TransactionsController,
-        ],
+        route_handlers=route_handlers,
         middleware=[],
         exception_handlers=handlers,  # type: ignore
-        openapi_config=OpenAPIConfig(
-            title="Syngrapha",
-            description="Syngrapha API",
-            version="1.0.0",
-            render_plugins=[
-                SwaggerRenderPlugin(),
-            ],
-            path="/docs",
-            components=Components(
-                security_schemes={
-                    "jwt_auth": SecurityScheme(
-                        type="apiKey",
-                        name="Authorization",
-                        security_scheme_in="header",
-                    )
-                }
-            )
-        ),
+        openapi_config=app_openapi_config,
         logging_config=logging_config,
     )
     setup_dishka(container, litestar_app)

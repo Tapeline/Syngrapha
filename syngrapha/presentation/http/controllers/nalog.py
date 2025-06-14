@@ -21,6 +21,7 @@ from syngrapha.presentation.http.framework.openapi import (
     error_spec,
     success_spec,
 )
+from syngrapha.presentation.http.security import security_defs
 
 
 class SubmitCodeSchema(BaseModel):
@@ -38,7 +39,7 @@ class IsTokenValidResponse(BaseModel):
 class AuthNalogController(Controller):
     path = "/auth-nalog"
     tags = ("Nalog auth",)
-    security = [{"jwt_auth": []}]
+    security = security_defs
 
     @post(
         path="/request",

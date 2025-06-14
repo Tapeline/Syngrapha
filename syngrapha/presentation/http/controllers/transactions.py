@@ -15,6 +15,7 @@ from syngrapha.presentation.http.framework.openapi import (
     error_spec,
     success_spec,
 )
+from syngrapha.presentation.http.security import security_defs
 
 
 class QRImportSchema(BaseModel):
@@ -67,7 +68,7 @@ def _transaction_to_response(transaction: Transaction) -> TransactionResponse:
 class TransactionsController(Controller):
     path = "/transactions"
     tags = ("Transactions",)
-    security = [{"jwt_auth": []}]
+    security = security_defs
 
     @post(
         path="/import-qr",

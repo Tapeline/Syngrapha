@@ -1,2 +1,2 @@
 # TODO:
-- [ ] support proper cookie authentication
+- [x] support proper cookie authentication
