@@ -31,4 +31,5 @@ build-backend = "poetry.core.masonry.api"
 ruff = "^0.11.12"
 wemake-python-styleguide = "^1.1.0"
 mypy = "^1.16.0"
+import-linter = "^2.3"
 

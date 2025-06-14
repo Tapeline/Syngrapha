@@ -1,0 +1,27 @@
+[importlinter]
+root_package = syngrapha
+include_external_packages=True
+
+
+[importlinter:contract:layered-arch]
+name = Layered architecture base
+type = layers
+layers =
+    syngrapha.bootstrap
+    syngrapha.infrastructure | syngrapha.presentation
+    syngrapha.application
+    syngrapha.domain
+
+
+[importlinter:contract:isolate-domain-and-app]
+name = Domain and app isolation
+type = forbidden
+source_modules =
+    syngrapha.domain
+    syngrapha.application
+forbidden_modules =
+    litestar
+    dishka
+    pydantic
+    sqlalchemy
+    adaptix
