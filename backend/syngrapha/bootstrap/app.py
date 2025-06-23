@@ -4,6 +4,7 @@ import sys
 from dishka import AsyncContainer, make_async_container
 from dishka.integrations.litestar import LitestarProvider, setup_dishka
 from litestar import Litestar
+from litestar.config.cors import CORSConfig
 from litestar.logging import LoggingConfig
 
 from syngrapha.bootstrap.di.ai import AICategorizerDIProvider
@@ -77,6 +78,7 @@ def create_app() -> Litestar:
         exception_handlers=handlers,  # type: ignore
         openapi_config=app_openapi_config,
         logging_config=logging_config,
+        cors_config=CORSConfig(allow_origins=["*"])
     )
     setup_dishka(container, litestar_app)
     return litestar_app

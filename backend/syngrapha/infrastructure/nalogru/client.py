@@ -58,7 +58,7 @@ class NalogClientImpl(NalogClient):
                 },
             ) as response
         ):
-            await response.text()
+            text = await response.text()
             if response.status // 100 != 2:
                 raise NalogReturnedError
 

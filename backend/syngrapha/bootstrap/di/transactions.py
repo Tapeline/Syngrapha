@@ -1,5 +1,9 @@
 from dishka import Provider, Scope, provide, provide_all
 
+from syngrapha.application.interactors.transactions.get_product import \
+    GetProductInteractor
+from syngrapha.application.interactors.transactions.get_transaction import \
+    GetTransactionInteractor
 from syngrapha.application.interactors.transactions.get_transactions import (
     GetMyTransactionsInteractor,
 )
@@ -18,6 +22,8 @@ class TransactionDIProvider(Provider):
     interactors = provide_all(
         GetMyTransactionsInteractor,
         QRImportInteractor,
+        GetTransactionInteractor,
+        GetProductInteractor,
         # TableImportInteractor,
         scope=Scope.REQUEST,
     )

@@ -1,10 +1,28 @@
 from abc import abstractmethod
 from collections.abc import Collection
+from dataclasses import dataclass
 from datetime import datetime
 from typing import Protocol
 
-from syngrapha.domain.transaction.transaction import Transaction
+from syngrapha.domain.transaction.transaction import Transaction, TransactionId
+from syngrapha.domain.product.product import ProductId
 from syngrapha.domain.user import UserId
+
+
+@dataclass
+class TransactionNotFound(Exception):
+    id: TransactionId
+
+
+@dataclass
+class TransactionAccessDenied(Exception):
+    id: TransactionId
+
+
+@dataclass
+class ProductNotFound(Exception):
+    transaction_id: TransactionId
+    product_id: ProductId
 
 
 class TransactionGateway(Protocol):
@@ -37,6 +55,22 @@ class TransactionGateway(Protocol):
             user_id: target user id
 
         Returns: list of transactions
+
+        """
+        raise NotImplementedError
+
+    @abstractmethod
+    async def get_by_id(self, tid: TransactionId) -> Transaction:
+        """
+        Get transaction by id.
+
+        Args:
+            tid: transaction id
+
+        Returns: transaction
+
+        Raises:
+            TransactionNotFound
 
         """
         raise NotImplementedError
