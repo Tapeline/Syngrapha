@@ -11,6 +11,7 @@ from syngrapha.application.interactors.common import interactor
 from syngrapha.application.persistence.transactions import TransactionGateway
 from syngrapha.application.persistence.uow import UoW
 from syngrapha.application.persistence.user import UserGateway
+from syngrapha.application.tasks.ai_tasks import AICategorizeTaskScheduler
 from syngrapha.domain.product.product import AutoCategorizingState, Product
 from syngrapha.domain.transaction.transaction import Transaction
 from syngrapha.utils.decorator import impl
@@ -26,7 +27,7 @@ class QRImportInteractor:
     transaction_gw: TransactionGateway
     id_gen: UUIDGenerator
     uow: UoW
-    ai_categorizer: AICategorizerService
+    ai_categorizer: AICategorizeTaskScheduler
     user_gw: UserGateway
 
     @impl
@@ -62,7 +63,8 @@ class QRImportInteractor:
                 owner=user_id
             )
             await self.transaction_gw.save_transaction(transaction)
-            await self.ai_categorizer.notify_need_to_categorize(
+            breakpoint()
+            await self.ai_categorizer.schedule(
                 {prod.id for prod in products}
             )
             return transaction

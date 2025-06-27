@@ -48,7 +48,7 @@ function NalogDialog({token}) {
     }
     return <Dialog open={isOpen} onOpenChange={setIsOpen}>
         <DialogTrigger asChild>
-            <Button className="w-full my-3 lg:w-[128px]" onClick={request}>
+            <Button className="w-full my-3" onClick={request}>
                 <span><KeyIcon className="inline"/> Login at nalog.ru</span>
             </Button>
         </DialogTrigger>
@@ -83,7 +83,7 @@ function NalogDialog({token}) {
 function CheckNalogAuthButton({token}) {
     const [isValid, setIsValid] = useState<boolean | null>(null);
     return <>
-        <Button className="w-full" onClick={() => {
+        <Button className="w-full my-3" onClick={() => {
             checkNalogCode(token).then(resp => {
                 setIsValid(resp?.data?.is_valid)
             })
@@ -135,9 +135,10 @@ export default function ViewAccountPage() {
                         <LogOutIcon className="inline"/>
                     </Button>
                 </div>
-                <NalogDialog token={accessToken}/>
-                <br/>
-                <CheckNalogAuthButton token={accessToken}/>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <NalogDialog token={accessToken}/>
+                    <CheckNalogAuthButton token={accessToken}/>
+                </div>
                 <h6 className="mt-[32px]"><b>Bio</b></h6>
                 <p>Lorem ipsum dolor sit amet </p>
                 <h6 className="mt-[32px]"><b>Stats</b></h6>

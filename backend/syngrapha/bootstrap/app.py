@@ -2,10 +2,15 @@ import asyncio
 import sys
 
 from dishka import AsyncContainer, make_async_container
-from dishka.integrations.litestar import LitestarProvider, setup_dishka
+from dishka.integrations.litestar import (
+    LitestarProvider,
+    setup_dishka as litestar_setup_dishka
+)
+from dishka.integrations.taskiq import setup_dishka as taskiq_setup_dishka
 from litestar import Litestar
 from litestar.config.cors import CORSConfig
 from litestar.logging import LoggingConfig
+from taskiq import AsyncBroker, InMemoryBroker
 
 from syngrapha.bootstrap.di.ai import AICategorizerDIProvider
 from syngrapha.bootstrap.di.algorithms import AlgorithmsDIProvider
@@ -13,6 +18,7 @@ from syngrapha.bootstrap.di.auth import AuthTokenDIProvider
 from syngrapha.bootstrap.di.auth_nalog import AuthNalogDIProvider
 from syngrapha.bootstrap.di.config import ConfigDIProvider
 from syngrapha.bootstrap.di.nalogru import NalogRuDIProvider
+from syngrapha.bootstrap.di.tasks import TaskDIProvider
 from syngrapha.bootstrap.di.transactions import TransactionDIProvider
 from syngrapha.bootstrap.di.uow import UoWDIProvider
 from syngrapha.bootstrap.di.user import UserDIProvider
@@ -26,7 +32,11 @@ def _create_config() -> Config:
     return Config()
 
 
-def _create_container(config: Config) -> AsyncContainer:
+def _create_broker(config: Config) -> AsyncBroker:
+    return InMemoryBroker()
+
+
+def _create_container(config: Config, broker: AsyncBroker) -> AsyncContainer:
     return make_async_container(
         LitestarProvider(),
         ConfigDIProvider(),
@@ -38,8 +48,10 @@ def _create_container(config: Config) -> AsyncContainer:
         AuthNalogDIProvider(),
         TransactionDIProvider(),
         AICategorizerDIProvider(),
+        TaskDIProvider(),
         context={
-            Config: config
+            Config: config,
+            AsyncBroker: broker
         },
     )
 
@@ -69,7 +81,8 @@ def create_app() -> Litestar:
     """Bootstrap the app."""
     _select_event_loop()
     config = _create_config()
-    container = _create_container(config)
+    broker = _create_broker(config)
+    container = _create_container(config, broker)
     logging_config = _create_logging_config()
     litestar_app = Litestar(
         debug=True,
@@ -80,5 +93,6 @@ def create_app() -> Litestar:
         logging_config=logging_config,
         cors_config=CORSConfig(allow_origins=["*"])
     )
-    setup_dishka(container, litestar_app)
+    litestar_setup_dishka(container, litestar_app)
+    taskiq_setup_dishka(container, broker)
     return litestar_app

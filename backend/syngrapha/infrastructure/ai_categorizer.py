@@ -1,20 +1,13 @@
-from collections.abc import Collection
 from dataclasses import dataclass
-
-from sqlalchemy import update
+from typing import Mapping
 
 from syngrapha.application.external.ai_categorizer import AICategorizerService
-from syngrapha.application.identifier import UUIDGenerator
+from syngrapha.config import AIConfig
 from syngrapha.domain.product.category import Category
 from syngrapha.domain.product.product import (
-    AutoCategorizingState,
-    Product,
-    ProductId,
+    ProductId, ProductName,
 )
-from syngrapha.infrastructure.ddg_client import DuckDuckGoAI
-from syngrapha.infrastructure.persistence.models import ProductModel
-from syngrapha.infrastructure.persistence.uow import SAUoW
-from syngrapha.utils.decorator import impl
+from syngrapha.infrastructure.ai_client import OpenRouterAI
 
 
 _BASE_PROMPT = (
@@ -27,25 +20,30 @@ _BASE_PROMPT = (
 )
 
 
-@dataclass(frozen=True, slots=True)
-class AIClient:
-    client: DuckDuckGoAI
+class AICategorizerServiceImpl(AICategorizerService):
+    def __init__(self, config: AIConfig) -> None:
+        """Create client."""
+        self.client = OpenRouterAI(config)
 
     async def request(self, prompt: str) -> str | None:
-        await self.client.connect()
         try:
-            return await self.client.chat(prompt)
+            return await self.client.request(prompt)
         except Exception:
             return None
 
-    async def _categorize(self, products: list[Product]) -> dict[ProductId, Category]:
-        prompt = _BASE_PROMPT + ",\n".join(
-            str(product.product) for product in products
-        )
-        ids = (product.id for product in products)
+    async def categorize(
+            self, products: Mapping[ProductId, ProductName]
+    ) -> Mapping[ProductId, Category]:
+        ids = list(products.keys())
+        names = [products[pid] for pid in ids]
+        prompt = _BASE_PROMPT + ",\n".join(names)
+        print("Requesting")
+        print("===")
+        print(prompt)
         response = await self.request(prompt)
         if not response:
             return {}
+        print("Responded", response)
         cat_names = (
             cat_name.strip(",; .1234567890").upper()
             for cat_name in response.split("\n")
@@ -56,28 +54,7 @@ class AIClient:
             else None
             for cat_name in cat_names
         )
+        print(categories)
         return {
             k: v for k, v in zip(ids, categories)
         }
-
-
-@dataclass(frozen=True, slots=True)
-class AICategorizerServiceImpl(AICategorizerService):
-    """Impl."""
-
-    uow: SAUoW
-    uuid_gen: UUIDGenerator
-    ai_client: AIClient
-
-    @impl
-    async def notify_need_to_categorize(
-            self,
-            ids: Collection[ProductId]
-    ) -> None:
-        upd_qry = update(ProductModel).where(
-            ProductModel.uuid.in_(ids)
-        ).values(auto_cat_state=AutoCategorizingState.IN_PROCESS)
-        await self.uow.session.execute(upd_qry)
-
-
-async def _categorize(ids: list[Product]):

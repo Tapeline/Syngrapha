@@ -28,7 +28,17 @@ class NalogConfig(BaseModel):
 
     secret: str = Field(
         alias="NALOG_SECRET",
-        default="IyvrAbKt9h/8p6a7QPh8gpkXYQ4="  # works for everyone, I reckon
+        default="IyvrAbKt9h/8p6a7QPh8gpkXYQ4="
+        # works for everyone, I reckon
+        # was published in some habr.com article
+    )
+
+
+class AIConfig(BaseModel):
+    """nalog.ru config."""
+
+    key: str = Field(
+        alias="AI_KEY",
     )
 
 
@@ -43,4 +53,7 @@ class Config(BaseModel):
     )
     nalog: NalogConfig = Field(
         default_factory=lambda: NalogConfig(**os.environ)
+    )
+    ai: AIConfig = Field(
+        default_factory=lambda: AIConfig(**os.environ)
     )

@@ -12,6 +12,7 @@ from syngrapha.application.table.data_assembler import (
     DataLoader,
     assemble_table,
 )
+from syngrapha.application.tasks.ai_tasks import AICategorizeTaskScheduler
 from syngrapha.domain.transaction.transaction import deduplicate_transactions
 from syngrapha.utils.decorator import impl
 
@@ -26,7 +27,7 @@ class TableImportInteractor:
     transaction_gw: TransactionGateway
     id_gen: UUIDGenerator
     uow: UoW
-    ai_categorizer: AICategorizerService
+    ai_categorizer: AICategorizeTaskScheduler
 
     @impl
     async def __call__(

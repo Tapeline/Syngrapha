@@ -17,7 +17,7 @@ from syngrapha.application.interactors.transactions.get_transactions import (
 from syngrapha.application.interactors.transactions.qr_import import (
     QRImportInteractor,
 )
-from syngrapha.domain.product.product import Product
+from syngrapha.domain.product.product import AutoCategorizingState, Product
 from syngrapha.domain.transaction.transaction import Transaction, TransactionId
 from syngrapha.presentation.http.framework.openapi import (
     error_spec,
@@ -38,6 +38,7 @@ class ProductResponse(BaseModel):
     price: int
     cost: int
     category: str | None
+    under_ai_process: bool
 
 
 class TransactionResponse(BaseModel):
@@ -75,6 +76,9 @@ def _product_to_response(
             product.category.value
             if product.category
             else None
+        ),
+        under_ai_process=(
+            product.auto_cat_state == AutoCategorizingState.IN_PROCESS
         )
     )
 
