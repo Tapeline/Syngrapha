@@ -45,7 +45,7 @@ class AICategorizerServiceImpl(AICategorizerService):
             return {}
         print("Responded", response)
         cat_names = (
-            cat_name.strip(",; .1234567890").upper()
+            cat_name.strip(",; .1234567890").lower()
             for cat_name in response.split("\n")
         )
         categories = (
