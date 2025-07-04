@@ -1,4 +1,3 @@
-from dataclasses import dataclass
 from typing import Mapping
 
 from syngrapha.application.external.ai_categorizer import AICategorizerService
@@ -7,7 +6,7 @@ from syngrapha.domain.product.category import Category
 from syngrapha.domain.product.product import (
     ProductId, ProductName,
 )
-from syngrapha.infrastructure.ai_client import OpenRouterAI
+from syngrapha.infrastructure.ai_client import GeminiAI, OpenRouterAI
 
 
 _BASE_PROMPT = (
@@ -23,7 +22,7 @@ _BASE_PROMPT = (
 class AICategorizerServiceImpl(AICategorizerService):
     def __init__(self, config: AIConfig) -> None:
         """Create client."""
-        self.client = OpenRouterAI(config)
+        self.client = GeminiAI(config)
 
     async def request(self, prompt: str) -> str | None:
         try:

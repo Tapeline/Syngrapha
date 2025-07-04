@@ -16,7 +16,6 @@ class AutoCategorizeInteractor:
     uow: UoW
 
     async def __call__(self, ids: Collection[ProductId]) -> None:
-        breakpoint()
         products = await self.product_gw.get_product_names(ids)
         print("Now categorizing")
         categories = await self.ai_categorizer.categorize(products)

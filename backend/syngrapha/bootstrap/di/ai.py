@@ -4,7 +4,6 @@ from syngrapha.application.external.ai_categorizer import AICategorizerService
 from syngrapha.application.interactors.auto_cat.cat_process import \
     AutoCategorizeInteractor
 from syngrapha.infrastructure.ai_categorizer import AICategorizerServiceImpl
-from syngrapha.infrastructure.ddg_client import DuckDuckGoAI
 
 
 class AICategorizerDIProvider(Provider):

@@ -63,7 +63,6 @@ class QRImportInteractor:
                 owner=user_id
             )
             await self.transaction_gw.save_transaction(transaction)
-            breakpoint()
             await self.ai_categorizer.schedule(
                 {prod.id for prod in products}
             )

@@ -1,3 +1,4 @@
+import json
 from typing import Final
 
 from aiohttp import ClientSession
@@ -36,8 +37,32 @@ class OpenRouterAI:
                 }
             ) as response
         ):
-            breakpoint()
             if response.status != 200:
                 raise AIClientError
             data = await response.json()
             return data["choices"][0]["message"]["content"]
+
+
+class GeminiAI:
+    """Gemini AI client."""
+
+    def __init__(self, config: AIConfig) -> None:
+        """Create client."""
+        self.key = config.key
+
+    async def request(self, prompt: str) -> str:
+        async with (
+            ClientSession() as session,
+            session.post(
+                "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent",
+                headers={
+                    "X-goog-api-key": self.key,
+                    "Content-Type": "application/json"
+                },
+                json={"contents": [{"parts": [{"text": prompt}]}]}
+            ) as response
+        ):
+            if response.status != 200:
+                raise AIClientError
+            data = await response.json()
+            return data["candidates"][0]["content"]["parts"][0]["text"]

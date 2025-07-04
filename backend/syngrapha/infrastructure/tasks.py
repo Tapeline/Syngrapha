@@ -38,5 +38,5 @@ async def _ai_cat_task(
         ids: list[UUID], *,
         interactor: FromDishka[AutoCategorizeInteractor]
 ) -> None:
-    await asyncio.sleep(20)
+    await asyncio.sleep(10)
     await interactor(ids)
