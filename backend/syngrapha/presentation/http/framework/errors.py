@@ -57,7 +57,7 @@ def gen_handler_mapping(
         handler_defs: Mapping[type[Exception], HandlerDef]
 ) -> Mapping[type[Exception], LitestarErrHandler]:
     """Generate Litestar exc handlers from DSL."""
-    return MappingProxyType(
+    return (
         {
             exc_t: _create_handler(exc_handler)
             for exc_t, exc_handler in handler_defs.items()

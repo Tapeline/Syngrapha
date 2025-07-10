@@ -135,10 +135,10 @@ export default function ViewAccountPage() {
                         <LogOutIcon className="inline"/>
                     </Button>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <NalogDialog token={accessToken}/>
-                    <CheckNalogAuthButton token={accessToken}/>
-                </div>
+                {/*<div className="grid grid-cols-1 md:grid-cols-2 gap-4">*/}
+                {/*    <NalogDialog token={accessToken}/>*/}
+                {/*    <CheckNalogAuthButton token={accessToken}/>*/}
+                {/*</div>*/}
                 <h6 className="mt-[32px]"><b>Bio</b></h6>
                 <p>Lorem ipsum dolor sit amet </p>
                 <h6 className="mt-[32px]"><b>Stats</b></h6>

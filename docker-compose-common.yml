@@ -1,0 +1,3 @@
+networks:
+  syngrapha_main_net:
+    driver: bridge

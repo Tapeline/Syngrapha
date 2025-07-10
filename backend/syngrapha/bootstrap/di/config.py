@@ -4,7 +4,7 @@ from syngrapha.config import (
     AIConfig, Config,
     NalogConfig,
     PostgresConfig,
-    SecurityConfig,
+    ProverkaChekaConfig, SecurityConfig,
 )
 
 
@@ -32,3 +32,9 @@ class ConfigDIProvider(Provider):
     def get_ai_config(self, config: Config) -> AIConfig:
         """Provide nalog.ru conf."""
         return config.ai
+
+
+    @provide(scope=Scope.APP)
+    def get_pc_config(self, config: Config) -> ProverkaChekaConfig:
+        """Provide nalog.ru conf."""
+        return config.pc_proxy

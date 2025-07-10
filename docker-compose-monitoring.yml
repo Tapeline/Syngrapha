@@ -1,0 +1,88 @@
+version: "3.7"
+services:
+  grafana:
+    image: grafana/grafana-enterprise:latest
+    restart: unless-stopped
+    expose:
+      - "3000"
+    ports:
+      - "3001:3000"
+    networks:
+      - syngrapha_main_net
+    volumes:
+      - syngrapha_grafana_data:/var/lib/grafana:rw
+      - ./grafana/provisioning:/etc/grafana/provisioning:rw
+      - ./grafana/dashboards:/etc/grafana/dashboards
+    environment:
+      - GF_SECURITY_ADMIN_USER=${GRAFANA_USER:-admin}
+      - GF_SECURITY_ADMIN_PASSWORD=${GRAFANA_PASSWORD:-admin}
+      - GF_USERS_ALLOW_SIGN_UP=false
+      - syngrapha_GF_dataBASE_WAL=true
+      - VIRTUAL_HOST=asgi-monitor.grafana
+      - NETWORK_ACCESS=internal
+      - VIRTUAL_PORT=3000
+
+  loki:
+    image: grafana/loki:2.7.3
+    expose:
+      - "3100"
+    volumes:
+      - ./loki/config.yml:/etc/loki/config.yml:ro
+      - syngrapha_loki_data:/tmp/:rw
+    command: -config.file=/etc/loki/config.yml
+    restart: unless-stopped
+    networks:
+      - syngrapha_main_net
+
+  vector:
+    image: timberio/vector:0.27.0-alpine
+    restart: unless-stopped
+    expose:
+      - "8383"
+    networks:
+      - syngrapha_main_net
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock:ro
+      - ./vector/vector.toml:/etc/vector/vector.toml:ro
+    logging:
+      driver: "json-file"
+      options:
+        max-size: "10m"
+
+  tempo:
+    image: grafana/tempo:2.0.1
+    command: [
+      "--target=all",
+      "--storage.trace.backend=local",
+      "--storage.trace.local.path=/var/tempo",
+      "--auth.enabled=false"
+    ]
+    restart: unless-stopped
+    ports:
+      - "14250:14250"
+      - "4317:4317"
+    networks:
+      - syngrapha_main_net
+    depends_on:
+      - loki
+
+  prometheus:
+    image: prom/prometheus:latest
+    restart: unless-stopped
+    networks:
+      - syngrapha_main_net
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml:ro
+      - syngrapha_prometheus_data:/prometheus
+    command:
+      - --config.file=/etc/prometheus/prometheus.yml
+      - --enable-feature=exemplar-storage
+    ports:
+      - "9090:9090"
+    expose:
+      - 9090
+
+volumes:
+  syngrapha_grafana_data: { }
+  syngrapha_loki_data: { }
+  syngrapha_prometheus_data: { }

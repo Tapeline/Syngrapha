@@ -1,7 +1,7 @@
 import axios, {AxiosError} from 'axios';
 
 export function apiUrl(endpoint: string): string {
-    return `http://localhost:8080/${endpoint}`;
+    return (import.meta.env.VITE_API_BASE_URL || `http://localhost:8080/`) + endpoint;
 }
 
 export async function sendRequest(

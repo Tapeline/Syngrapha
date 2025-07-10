@@ -157,17 +157,15 @@ function CreateQRDialog({token, refreshList}) {
                     <CheckIcon/>
                 </div>
             }
-            <form onSubmit={onSubmit} className="space-y-8">
-                <DialogFooter>
-                    <Button type="submit" disabled={isLoading}>
-                        {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin"/>}
-                        Import
-                    </Button>
-                    <Button onClick={() => setIsOpen(false)} variant="outline">
-                        Close
-                    </Button>
-                </DialogFooter>
-            </form>
+            <DialogFooter>
+                <Button onClick={onSubmit} disabled={isLoading}>
+                    {isLoading && <Loader2 className="mr-2 h-5 w-5 animate-spin"/>}
+                    Import
+                </Button>
+                <Button onClick={() => setIsOpen(false)} variant="outline">
+                    Close
+                </Button>
+            </DialogFooter>
         </DialogContent>
     </Dialog>
 }

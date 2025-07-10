@@ -34,6 +34,12 @@ class NalogConfig(BaseModel):
     )
 
 
+class ProverkaChekaConfig(BaseModel):
+    """ProverkaCheka proxy config."""
+
+    base_url: str = Field(alias="PC_PROXY_URL")
+
+
 class AIConfig(BaseModel):
     """nalog.ru config."""
 
@@ -56,4 +62,7 @@ class Config(BaseModel):
     )
     ai: AIConfig = Field(
         default_factory=lambda: AIConfig(**os.environ)
+    )
+    pc_proxy: ProverkaChekaConfig = Field(
+        default_factory=lambda: ProverkaChekaConfig(**os.environ)
     )

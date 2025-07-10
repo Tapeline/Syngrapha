@@ -1,0 +1,11 @@
+apiVersion: 1
+
+providers:
+- name: "ProverkaCheka Proxy Metrics"
+  orgId: 1
+  folder: "API"
+  type: "file"
+  disableDeletion: true
+  editable: true
+  options:
+    path: "/etc/grafana/dashboards/pc-proxy-metrics.json"

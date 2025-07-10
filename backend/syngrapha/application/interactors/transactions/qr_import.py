@@ -1,11 +1,7 @@
 from typing import final
 
 from syngrapha.application.auth.auth import UserIdProvider
-from syngrapha.application.external.ai_categorizer import AICategorizerService
-from syngrapha.application.external.nalog import (
-    NalogClient,
-    NalogTokenRequiresReAuth,
-)
+from syngrapha.application.external.checks import SimpleCheckLoader
 from syngrapha.application.identifier import UUIDGenerator
 from syngrapha.application.interactors.common import interactor
 from syngrapha.application.persistence.transactions import TransactionGateway
@@ -23,7 +19,8 @@ class QRImportInteractor:
     """Import transaction from receipt QR code."""
 
     user_idp: UserIdProvider
-    nalog_client: NalogClient
+    #nalog_client: NalogClient
+    pc_proxy: SimpleCheckLoader
     transaction_gw: TransactionGateway
     id_gen: UUIDGenerator
     uow: UoW
@@ -34,16 +31,17 @@ class QRImportInteractor:
     async def __call__(self, qr_code: str) -> Transaction:
         user_id = await self.user_idp.get_user()
         async with self.uow:
-            user = await self.user_gw.get_by_id(user_id)
-            token_valid = await self.nalog_client.check_token_valid(
-                user.nalog_access_token
-            )
-            if not token_valid:
-                raise NalogTokenRequiresReAuth
+            # user = await self.user_gw.get_by_id(user_id)
+            # token_valid = await self.nalog_client.check_token_valid(
+            #     user.nalog_access_token
+            # )
+            # if not token_valid:
+            #     raise NalogTokenRequiresReAuth
             await self.user_gw.lock(user_id)
-            receipt = await self.nalog_client.get_receipt(
-                user.nalog_access_token or "", qr_code
-            )
+            # receipt = await self.nalog_client.get_receipt(
+            #     user.nalog_access_token or "", qr_code
+            # )
+            receipt = await self.pc_proxy.get_receipt(qr_code)
             products = [
                 Product(
                     id=self.id_gen(),

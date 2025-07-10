@@ -287,6 +287,29 @@ tests = ["cloudpickle ; platform_python_implementation == \"CPython\"", "hypothe
 tests-mypy = ["mypy (>=1.11.1) ; platform_python_implementation == \"CPython\" and python_version >= \"3.10\"", "pytest-mypy-plugins ; platform_python_implementation == \"CPython\" and python_version >= \"3.10\""]
 
 [[package]]
+name = "beautifulsoup4"
+version = "4.13.4"
+description = "Screen-scraping library"
+optional = false
+python-versions = ">=3.7.0"
+groups = ["main"]
+files = [
+    {file = "beautifulsoup4-4.13.4-py3-none-any.whl", hash = "sha256:9bbbb14bfde9d79f38b8cd5f8c7c85f4b8f2523190ebed90e950a8dea4cb1c4b"},
+    {file = "beautifulsoup4-4.13.4.tar.gz", hash = "sha256:dbb3c4e1ceae6aefebdaf2423247260cd062430a410e38c66f2baa50a8437195"},
+]
+
+[package.dependencies]
+soupsieve = ">1.2"
+typing-extensions = ">=4.0.0"
+
+[package.extras]
+cchardet = ["cchardet"]
+chardet = ["chardet"]
+charset-normalizer = ["charset-normalizer"]
+html5lib = ["html5lib"]
+lxml = ["lxml"]
+
+[[package]]
 name = "cachetools"
 version = "5.5.2"
 description = "Extensible memoizing collections and decorators"
@@ -1841,6 +1864,21 @@ realtime = ["websockets (>=13,<16)"]
 voice-helpers = ["numpy (>=2.0.2)", "sounddevice (>=0.5.1)"]
 
 [[package]]
+name = "outcome"
+version = "1.3.0.post0"
+description = "Capture the outcome of Python function calls."
+optional = false
+python-versions = ">=3.7"
+groups = ["main"]
+files = [
+    {file = "outcome-1.3.0.post0-py2.py3-none-any.whl", hash = "sha256:e771c5ce06d1415e356078d3bdd68523f284b4ce5419828922b6871e65eda82b"},
+    {file = "outcome-1.3.0.post0.tar.gz", hash = "sha256:9dcf02e65f2971b80047b377468e72a268e15c0af3cf1238e6ff14f7f91143b8"},
+]
+
+[package.dependencies]
+attrs = ">=19.2.0"
+
+[[package]]
 name = "packaging"
 version = "25.0"
 description = "Core utilities for Python packages"
@@ -2344,6 +2382,19 @@ files = [
 windows-terminal = ["colorama (>=0.4.6)"]
 
 [[package]]
+name = "pysocks"
+version = "1.7.1"
+description = "A Python SOCKS client module. See https://github.com/Anorov/PySocks for more information."
+optional = false
+python-versions = ">=2.7, !=3.0.*, !=3.1.*, !=3.2.*, !=3.3.*"
+groups = ["main"]
+files = [
+    {file = "PySocks-1.7.1-py27-none-any.whl", hash = "sha256:08e69f092cc6dbe92a0fdd16eeb9b9ffbc13cadfe5ca4c7bd92ffb078b293299"},
+    {file = "PySocks-1.7.1-py3-none-any.whl", hash = "sha256:2725bd0a9925919b9b51739eea5f9e2bae91e83288108a9ad338b2e3a4435ee5"},
+    {file = "PySocks-1.7.1.tar.gz", hash = "sha256:3f8804571ebe159c380ac6de37643bb4685970655d3bba243530d6558b799aa0"},
+]
+
+[[package]]
 name = "python-dotenv"
 version = "1.1.0"
 description = "Read key-value pairs from a .env file and set them as environment variables"
@@ -2539,6 +2590,26 @@ files = [
 ]
 
 [[package]]
+name = "selenium"
+version = "4.34.0"
+description = "Official Python bindings for Selenium WebDriver"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "selenium-4.34.0-py3-none-any.whl", hash = "sha256:fc3535cfd99a073c21bf9091519b48ed31b34bf2cbd132f62e8c732b2e815b2d"},
+    {file = "selenium-4.34.0.tar.gz", hash = "sha256:8b7eb05a0ed22f9bb2187fd256c28630824ad01d8397b4e68bc0af7dabf26c80"},
+]
+
+[package.dependencies]
+certifi = ">=2025.4.26"
+trio = ">=0.30.0,<0.31.0"
+trio-websocket = ">=0.12.2,<0.13.0"
+typing_extensions = ">=4.14.0,<4.15.0"
+urllib3 = {version = ">=2.4.0,<2.5.0", extras = ["socks"]}
+websocket-client = ">=1.8.0,<1.9.0"
+
+[[package]]
 name = "six"
 version = "1.17.0"
 description = "Python 2 and 3 compatibility utilities"
@@ -2560,6 +2631,30 @@ groups = ["main"]
 files = [
     {file = "sniffio-1.3.1-py3-none-any.whl", hash = "sha256:2f6da418d1f1e0fddd844478f41680e794e6051915791a034ff65e5f100525a2"},
     {file = "sniffio-1.3.1.tar.gz", hash = "sha256:f4324edc670a0f49750a81b895f35c3adb843cca46f0530f79fc1babb23789dc"},
+]
+
+[[package]]
+name = "sortedcontainers"
+version = "2.4.0"
+description = "Sorted Containers -- Sorted List, Sorted Dict, Sorted Set"
+optional = false
+python-versions = "*"
+groups = ["main"]
+files = [
+    {file = "sortedcontainers-2.4.0-py2.py3-none-any.whl", hash = "sha256:a163dcaede0f1c021485e957a39245190e74249897e2ae4b2aa38595db237ee0"},
+    {file = "sortedcontainers-2.4.0.tar.gz", hash = "sha256:25caa5a06cc30b6b83d11423433f65d1f9d76c4c6a0c90e3379eaa43b9bfdb88"},
+]
+
+[[package]]
+name = "soupsieve"
+version = "2.7"
+description = "A modern CSS selector implementation for Beautiful Soup."
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "soupsieve-2.7-py3-none-any.whl", hash = "sha256:6e60cc5c1ffaf1cebcc12e8188320b72071e922c2e897f737cadce79ad5d30c4"},
+    {file = "soupsieve-2.7.tar.gz", hash = "sha256:ad282f9b6926286d2ead4750552c8a6142bc4c783fd66b0293547c8fe6ae126a"},
 ]
 
 [[package]]
@@ -2757,6 +2852,43 @@ slack = ["slack-sdk"]
 telegram = ["requests"]
 
 [[package]]
+name = "trio"
+version = "0.30.0"
+description = "A friendly Python library for async concurrency and I/O"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "trio-0.30.0-py3-none-any.whl", hash = "sha256:3bf4f06b8decf8d3cf00af85f40a89824669e2d033bb32469d34840edcfc22a5"},
+    {file = "trio-0.30.0.tar.gz", hash = "sha256:0781c857c0c81f8f51e0089929a26b5bb63d57f927728a5586f7e36171f064df"},
+]
+
+[package.dependencies]
+attrs = ">=23.2.0"
+cffi = {version = ">=1.14", markers = "os_name == \"nt\" and implementation_name != \"pypy\""}
+idna = "*"
+outcome = "*"
+sniffio = ">=1.3.0"
+sortedcontainers = "*"
+
+[[package]]
+name = "trio-websocket"
+version = "0.12.2"
+description = "WebSocket library for Trio"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "trio_websocket-0.12.2-py3-none-any.whl", hash = "sha256:df605665f1db533f4a386c94525870851096a223adcb97f72a07e8b4beba45b6"},
+    {file = "trio_websocket-0.12.2.tar.gz", hash = "sha256:22c72c436f3d1e264d0910a3951934798dcc5b00ae56fc4ee079d46c7cf20fae"},
+]
+
+[package.dependencies]
+outcome = ">=1.2.0"
+trio = ">=0.11"
+wsproto = ">=0.14"
+
+[[package]]
 name = "typing-extensions"
 version = "4.14.0"
 description = "Backported and Experimental Type Hints for Python 3.9+"
@@ -2797,15 +2929,18 @@ files = [
 
 [[package]]
 name = "urllib3"
-version = "2.5.0"
+version = "2.4.0"
 description = "HTTP library with thread-safe connection pooling, file post, and more."
 optional = false
 python-versions = ">=3.9"
 groups = ["main"]
 files = [
-    {file = "urllib3-2.5.0-py3-none-any.whl", hash = "sha256:e6b01673c0fa6a13e374b50871808eb3bf7046c4b125b216f6bf1cc604cff0dc"},
-    {file = "urllib3-2.5.0.tar.gz", hash = "sha256:3fc47733c7e419d4bc3f6b3dc2b4f890bb743906a30d56ba4a5bfa4bbff92760"},
+    {file = "urllib3-2.4.0-py3-none-any.whl", hash = "sha256:4e16665048960a0900c702d4a66415956a584919c03361cac9f1df5c5dd7e813"},
+    {file = "urllib3-2.4.0.tar.gz", hash = "sha256:414bc6535b787febd7567804cc015fee39daab8ad86268f1310a9250697de466"},
 ]
+
+[package.dependencies]
+pysocks = {version = ">=1.5.6,<1.5.7 || >1.5.7,<2.0", optional = true, markers = "extra == \"socks\""}
 
 [package.extras]
 brotli = ["brotli (>=1.0.9) ; platform_python_implementation == \"CPython\"", "brotlicffi (>=0.8.0) ; platform_python_implementation != \"CPython\""]
@@ -2977,6 +3112,23 @@ files = [
 anyio = ">=3.0.0"
 
 [[package]]
+name = "websocket-client"
+version = "1.8.0"
+description = "WebSocket client for Python with low level API options"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "websocket_client-1.8.0-py3-none-any.whl", hash = "sha256:17b44cc997f5c498e809b22cdf2d9c7a9e71c02c8cc2b6c56e7c2d1239bfa526"},
+    {file = "websocket_client-1.8.0.tar.gz", hash = "sha256:3239df9f44da632f96012472805d40a23281a991027ce11d2f45a6f24ac4c3da"},
+]
+
+[package.extras]
+docs = ["Sphinx (>=6.0)", "myst-parser (>=2.0.0)", "sphinx-rtd-theme (>=1.1.0)"]
+optional = ["python-socks", "wsaccel"]
+test = ["websockets"]
+
+[[package]]
 name = "websockets"
 version = "15.0.1"
 description = "An implementation of the WebSocket Protocol (RFC 6455 & 7692)"
@@ -3071,6 +3223,21 @@ files = [
 attrs = "*"
 flake8 = ">=7.1,<8.0"
 pygments = ">=2.5,<3.0"
+
+[[package]]
+name = "wsproto"
+version = "1.2.0"
+description = "WebSockets state-machine based protocol implementation"
+optional = false
+python-versions = ">=3.7.0"
+groups = ["main"]
+files = [
+    {file = "wsproto-1.2.0-py3-none-any.whl", hash = "sha256:b9acddd652b585d75b20477888c56642fdade28bdfd3579aa24a4d2c037dd736"},
+    {file = "wsproto-1.2.0.tar.gz", hash = "sha256:ad565f26ecb92588a3e43bc3d96164de84cd9902482b130d0ddbaa9664a85065"},
+]
+
+[package.dependencies]
+h11 = ">=0.9.0,<1"
 
 [[package]]
 name = "yarl"
@@ -3214,4 +3381,4 @@ type = ["pytest-mypy"]
 [metadata]
 lock-version = "2.1"
 python-versions = ">=3.13,<4.0"
-content-hash = "b838c7ee7b2e2714b0f17955a5bf434d5b0b0c15eb0fea3d500b3ec24f7ac9d2"
+content-hash = "7cc00a9cff0e4c79595aff450aeeb1dca13e4d54a39c5cb568f95b2b15c203f1"

@@ -26,7 +26,7 @@ class NalogReceiptItem:
 
     name: str
     price: Money
-    quantity: int
+    quantity: float
 
 
 @dataclass
